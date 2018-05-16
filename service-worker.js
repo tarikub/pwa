@@ -31,23 +31,41 @@ self.addEventListener('activate', function(event) {
     );
 });
 
+
 // During runtime, get files from cache or -> fetch, then save to cache
-this.addEventListener('fetch', event => {
-    // request.mode = navigate isn't supported in all browsers
-    // so include a check for Accept: text/html header.
-    if (event.request.mode === 'navigate' || (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html'))) {
+self.addEventListener('fetch', function (event) {
+    // only process GET requests
+    if (event.request.method === 'GET') {
         event.respondWith(
             fetch(event.request.url).catch(error => {
                 // Return the offline page
                 return caches.match(offlineUrl);
-            })
-        );
-    } else {
-        // Respond with everything else if we can
-        event.respondWith(caches.match(event.request)
-            .then(function(response) {
-                return response || fetch(event.request);
-            })
-        );
+            }));
     }
+
+    let requestCopy = event.request.clone();
+    return fetch(requestCopy).then(function (response) {
+        // opaque responses cannot be examined, they will just error
+        if (response.type === 'opaque') {
+            // don't cache opaque response, you cannot validate it's status/success
+            return response;
+            // response.ok => response.status == 2xx ? true : false;
+        } else if (!response.ok) {
+            console.error(response.statusText);
+        } else {
+            return caches.open(CACHE_NAME).then(function (cache) {
+                cache.put(event.request, response.clone());
+                return response;
+                // if the response fails to cache, catch the error
+            }).catch(function (error) {
+                console.error(error);
+                return error;
+            });
+        }
+    }).catch(function (error) {
+        // fetch will fail if server cannot be reached,
+        // this means that either the client or server is offline
+        console.log("Client or server is offline");
+        return caches.match(offlineUrl);
+    });
 });

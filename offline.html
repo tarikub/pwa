@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -11,24 +11,25 @@
     <!-- Add to home screen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="OpenUI5 TODO PWA">
+    <meta name="apple-mobile-web-app-title" content="Progressive Web Application Sample">
     <link rel="apple-touch-icon" href="icons/icon-152x152.png">
     <!-- Windows related -->
     <meta name="msapplication-TileImage" content="icons/icon-144x144.png">
     <meta name="msapplication-TileColor" content="#386CC1">
     <meta name="theme-color" content="#164391">
-
+    <meta name="Description" content="Progressive Web Application Sample">
     <title>PWA</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+   
+</head>
+
+<body>
+    <div class="container animated bounceInDown">
+        <h1 class="project animated rubberBand">Progressive Web Application</h1>
+        <h2 class="version">Sample</h2>
+    </div>
     <style>
-        body {
-            overflow: hidden;
-        }
-        
         .container {
-            height: 100vh;
+            height: 90vh;
             padding: 0;
             margin: 0;
             display: -webkit-box;
@@ -45,20 +46,34 @@
         
         .project {
             font-size: 45px;
-            color: #7b8993; /* offline color */
+            color: #7b8993;
         }
         
         .version {
-            font-size: 12px;
+            font-size: 17px;
         }
     </style>
-</head>
-
-<body>
-    <div class="container animated bounceInDown">
-        <h1 class="project animated rubberBand">Progressive Web Application</h1>
-        <h2class="version">Sample</h2>
-    </div>
+<noscript id="deferred-styles">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" media="screen" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" async>
+  </noscript>
+<script>
+    var loadDeferredStyles = function() {
+        var addStylesNode = document.getElementById("deferred-styles");
+        var replacement = document.createElement("div");
+        replacement.innerHTML = addStylesNode.textContent;
+        document.body.appendChild(replacement)
+        addStylesNode.parentElement.removeChild(addStylesNode);
+    };
+    var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    if (raf) raf(function() {
+        window.setTimeout(loadDeferredStyles, 0);
+    });
+    else window.addEventListener('load', loadDeferredStyles);
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" deffer></script>
+<script src="register-worker.js" deffer></script>
 </body>
 
 </html>
